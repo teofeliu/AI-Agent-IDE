@@ -4,6 +4,7 @@ const agentController = require('../controllers/agentController');
 
 router.post('/create-agent', agentController.createAgent);
 router.get('/', agentController.getWorkspace);
-router.post('/clear', agentController.clearWorkspace); // Add this new route
+router.post('/clear', agentController.clearWorkspace);
+router.put('/', agentController.updateWorkspace);  // Add this line
 
 module.exports = router;

@@ -1,5 +1,5 @@
 // src/components/Workspace.js
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useDrop } from 'react-dnd';
 import Block from './Block';
 import { getWorkspace, updateWorkspace, clearWorkspace } from '../services/api';
@@ -7,11 +7,7 @@ import { getWorkspace, updateWorkspace, clearWorkspace } from '../services/api';
 const Workspace = () => {
   const [blocks, setBlocks] = useState([]);
 
-  useEffect(() => {
-    fetchWorkspace();
-  }, []);
-
-  const fetchWorkspace = async () => {
+  const fetchWorkspace = useCallback(async () => {
     console.log('Fetching workspace...');
     try {
       const workspace = await getWorkspace();
@@ -20,7 +16,11 @@ const Workspace = () => {
     } catch (error) {
       console.error('Error fetching workspace:', error);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    fetchWorkspace();
+  }, [fetchWorkspace]);
 
   const [, drop] = useDrop({
     accept: 'BLOCK',
@@ -87,17 +87,25 @@ const Workspace = () => {
     }
   };
 
+  useEffect(() => {
+    console.log('Blocks updated:', blocks);
+  }, [blocks]);
+
   return (
     <div>
+      <button onClick={fetchWorkspace}>Refresh Workspace</button>
       <button onClick={handleClearWorkspace}>Clear Workspace</button>
       <div id="workspace" ref={drop} style={{ minHeight: '400px', position: 'relative' }}>
-        {blocks.map((block, index) => (
-          <Block
-            key={block.id}
-            index={index}
-            {...block}
-          />
-        ))}
+        {blocks.map((block, index) => {
+          console.log('Rendering block:', block);
+          return (
+            <Block
+              key={block.id}
+              index={index}
+              {...block}
+            />
+          );
+        })}
       </div>
     </div>
   );
