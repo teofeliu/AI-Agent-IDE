@@ -1,58 +1,76 @@
-// backend/src/controllers/AgentController.js
+// backend/src/controllers/agentController.js
 
-// Import the Workspace model from Mongoose
 const Workspace = require('../models/Workspace');
+const Block = require('../models/Block');
+const { Input, Output, Model } = require('../models/BlockTypes');
+const supportedModels = require('../data/models.json').supportedModels;
 
-// Export the createAgent function as part of the module
 exports.createAgent = async (req, res) => {
   try {
-    // Log the received data for debugging
     console.log('Received agent data:', req.body);
-    
-    // Destructure the agent object from the request body
     const { agent } = req.body;
     
-    // Validate the agent structure
     if (!agent || !agent.layout || !agent.layout.blocks) {
       console.log('Invalid agent structure');
-      // If invalid, send a 400 Bad Request response
       return res.status(400).json({ error: 'Invalid agent structure' });
     }
 
-    // Process the blocks from the agent layout
-    const blocks = agent.layout.blocks.map((block, index) => ({
-      id: block.id,
-      type: block.type,
-      // Set the vertical position based on the block's index
-      position: {
-        y: index * 60 // Multiply by 60 to space out blocks vertically
-      },
-      // Store the original block data
-      rawData: block
+    const blocks = await Promise.all(agent.layout.blocks.map(async (block, index) => {
+      let content;
+
+      switch (block.type) {
+        case 'Model':
+          if (block.modelDescription) {
+            const modelInfo = supportedModels.find(
+              model => `${model.company} ${model.name}`.toLowerCase() === block.modelDescription.toLowerCase()
+            );
+            content = new Model({
+              modelDescription: block.modelDescription,
+              company: modelInfo ? modelInfo.company : null,
+              name: modelInfo ? modelInfo.name : null
+            });
+          }
+          break;
+        case 'Input':
+          content = new Input({
+            content: block.content
+          });
+          break;
+        case 'Output':
+          content = new Output({
+            content: block.content
+          });
+          break;
+      }
+
+      await content.save();
+
+      return new Block({
+        id: block.id,
+        type: block.type,
+        position: {
+          y: index * 90 // Refactor
+        },
+        content: content
+      });
     }));
 
-    // Log the processed blocks for debugging
     console.log('Processed blocks:', blocks);
 
-    // Find an existing workspace or create a new one
     let workspace = await Workspace.findOne();
     if (!workspace) {
       workspace = new Workspace();
     }
     
-    // Update the workspace with the new agent data
     workspace.name = agent.name;
     workspace.description = agent.description;
     workspace.blocks = blocks;
 
-    // Save the updated workspace to the database
     await workspace.save();
     console.log('Workspace updated:', workspace);
 
-    // Send the updated workspace as a JSON response with 200 OK status
     res.status(200).json(workspace);
   } catch (error) {
-    // If an error occurs, log it and send a 500 Internal Server Error response
     console.error('Error in createAgent:', error);
     res.status(500).json({ error: error.message });
   }

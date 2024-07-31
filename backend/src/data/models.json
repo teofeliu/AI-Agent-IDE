@@ -1,0 +1,16 @@
+{
+    "supportedModels": [
+      {
+        "company": "OpenAI",
+        "name": "GPT-4"
+      },
+      {
+        "company": "OpenAI",
+        "name": "GPT-3.5"
+      },
+      {
+        "company": "Anthropic",
+        "name": "Claude"
+      }
+    ]
+  }

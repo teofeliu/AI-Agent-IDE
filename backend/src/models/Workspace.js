@@ -1,20 +1,10 @@
-// backend/src/models/Workspace.js
-
 const mongoose = require('mongoose');
-
-const blockSchema = new mongoose.Schema({
-  id: String,
-  type: String,
-  position: {
-    y: Number
-  },
-  rawData: Object
-});
+const Block = require('./Block');
 
 const workspaceSchema = new mongoose.Schema({
   name: String,
   description: String,
-  blocks: [blockSchema]
+  blocks: [Block.schema]
 });
 
 module.exports = mongoose.model('Workspace', workspaceSchema);
