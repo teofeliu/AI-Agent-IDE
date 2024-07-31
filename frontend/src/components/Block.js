@@ -11,12 +11,15 @@ const Block = ({ id, type, position, index }) => {
     }),
   });
 
+  // Default position if not provided
+  const blockPosition = position || { y: 0 };
+
   return (
     <div
       ref={drag}
       style={{
         position: 'absolute',
-        top: position.y,
+        top: blockPosition.y,
         left: 0,
         opacity: isDragging ? 0.5 : 1,
         backgroundColor: '#f0f0f0',

@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const workspaceController = require('../controllers/workspaceController');
+const agentController = require('../controllers/agentController');
 
-router.get('/', workspaceController.getWorkspace);
-router.post('/', workspaceController.saveWorkspace);
+router.post('/create-agent', agentController.createAgent);
+router.get('/', agentController.getWorkspace);
+router.post('/clear', agentController.clearWorkspace); // Add this new route
 
 module.exports = router;
