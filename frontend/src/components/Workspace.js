@@ -1,4 +1,4 @@
-// src/components/Workspace.js
+// frontend/src/components/Workspace.js
 import React, { useEffect, useState, useCallback } from 'react';
 import { useDrop } from 'react-dnd';
 import Block from './Block';

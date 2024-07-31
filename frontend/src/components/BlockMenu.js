@@ -1,4 +1,4 @@
-// src/components/BlockMenu.js
+// frontend/src/components/BlockMenu.js
 import React from 'react';
 import { useDrag } from 'react-dnd';
 

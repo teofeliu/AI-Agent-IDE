@@ -1,4 +1,4 @@
-// src/components/Block.js
+// frontend/src/components/Block.js
 import React from 'react';
 import { useDrag } from 'react-dnd';
 

@@ -1,3 +1,5 @@
+// backend/src/config.js
+
 module.exports = {
     mongoURI: process.env.MONGO_URI || 'mongodb://localhost:27017/ai-agent-ide',
     port: process.env.PORT || 3001,

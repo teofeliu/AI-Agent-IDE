@@ -1,4 +1,4 @@
-// src/components/Droppable.js
+// frontend/src/components/Droppable.js
 import React from 'react';
 import { useDroppable } from '@dnd-kit/core';
 

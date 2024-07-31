@@ -1,3 +1,5 @@
+// backend/src/controllers/workspaceController.js
+
 const workspaceService = require('../services/workspaceService');
 
 exports.getWorkspace = async (req, res) => {

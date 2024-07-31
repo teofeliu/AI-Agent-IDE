@@ -1,4 +1,4 @@
-// src/components/Draggable.js
+// frontend/src/components/Draggable.js
 import React from 'react';
 import { useDraggable } from '@dnd-kit/core';
 
