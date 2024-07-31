@@ -11,7 +11,12 @@ export const createAgent = async (agentData) => {
 
 export const getWorkspace = async () => {
   const response = await axios.get(`${API_URL}/workspace`);
-  return response.data;
+  const workspace = response.data;
+  workspace.blocks = workspace.blocks.map(block => ({
+    ...block,
+    content: block.content || {}  // Ensure content is always an object
+  }));
+  return workspace;
 };
 
 export const updateWorkspace = async (blocks) => {

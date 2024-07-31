@@ -14,6 +14,10 @@ const Block = ({ id, type, position, content }) => {
   const blockPosition = position || { y: 0 };
 
   const renderContent = () => {
+    if (!content) {
+      return <div>Type: {type}</div>;
+    }
+
     switch (type) {
       case 'Model':
         return (
@@ -28,7 +32,7 @@ const Block = ({ id, type, position, content }) => {
         return (
           <>
             <div>Type: {type}</div>
-            <div>Content: {content.content}</div>
+            <div>Content: {content.content || 'No content'}</div>
           </>
         );
       default:
@@ -50,7 +54,7 @@ const Block = ({ id, type, position, content }) => {
         border: '1px solid #ccc',
         borderRadius: '4px',
         cursor: 'move',
-        width: '200px',  // Add a fixed width for better layout
+        width: '200px',
       }}
     >
       {renderContent()}

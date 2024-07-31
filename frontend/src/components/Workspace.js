@@ -96,16 +96,15 @@ const Workspace = () => {
       <button onClick={fetchWorkspace}>Refresh Workspace</button>
       <button onClick={handleClearWorkspace}>Clear Workspace</button>
       <div id="workspace" ref={drop} style={{ minHeight: '400px', position: 'relative' }}>
-        {blocks.map((block, index) => {
-          console.log('Rendering block:', block);
-          return (
-            <Block
-              key={block.id}
-              index={index}
-              {...block}
-            />
-          );
-        })}
+        {blocks.map((block) => (
+          <Block
+            key={block.id}
+            id={block.id}
+            type={block.type}
+            position={block.position}
+            content={block.content}
+          />
+        ))}
       </div>
     </div>
   );
