@@ -10,11 +10,11 @@ exports.createAgent = async (req, res) => {
       return res.status(400).json({ error: 'Invalid agent structure' });
     }
 
-    const blocks = agent.layout.blocks.map(block => ({
+    const blocks = agent.layout.blocks.map((block, index) => ({
       id: block.id,
       type: block.type,
       position: {
-        y: block.position.y
+        y: index * 60 // Set initial y position based on index
       },
       rawData: block
     }));
@@ -42,9 +42,16 @@ exports.createAgent = async (req, res) => {
 
 exports.getWorkspace = async (req, res) => {
   try {
-    const workspace = await Workspace.findOne();
+    console.log('Fetching workspace');
+    let workspace = await Workspace.findOne();
+    if (!workspace) {
+      workspace = new Workspace({ blocks: [] });
+      await workspace.save();
+    }
+    console.log('Fetched workspace:', workspace);
     res.json(workspace);
   } catch (error) {
+    console.error('Error in getWorkspace:', error);
     res.status(500).json({ error: error.message });
   }
 };
