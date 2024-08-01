@@ -1,17 +1,22 @@
 // backend/src/data/prompts.js
 
 module.exports = {
-    generateThoughts: `Given the following block types and their descriptions:
+  generateThoughts: `Given the following block types and their descriptions:
   {blockTypes}
   
   And the following available models:
   {models}
   
-  Please provide a step-by-step thought process for creating an AI agent based on this prompt:
+  Please create an AI agent based on this prompt:
   {prompt}
   
-  Think through the process carefully, explaining your reasoning and how you would use the different block types to construct the agent.`,
+  First, brainstorm and explain your reasoning for the agent structure.
+  Then, on a new line starting with "STRUCTURE:", provide a concise description of the agent's structure.
   
+  For example:
+  [Your brainstorming and reasoning here]
+  STRUCTURE: An agent with one input block, two model blocks (GPT-4 and Claude), and one output block to combine their responses.`,
+
   generateJSON: `Based on the following thoughts:
 {thoughts}
 
@@ -20,6 +25,9 @@ And using this JSON structure as a template:
 
 Consider the following block types and their descriptions:
 {blockTypes}
+
+And the following available models:
+{models}
 
 {instructions}
 

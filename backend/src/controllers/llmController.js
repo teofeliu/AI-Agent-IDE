@@ -52,7 +52,7 @@ const extractJSON = (text) => {
     }
   };
   
-  exports.generateJSON = async (req, res) => {
+exports.generateJSON = async (req, res) => {
     try {
       const { thoughts, instructions } = req.body;
       console.log('Generate JSON - Input thoughts:', thoughts);
@@ -60,14 +60,16 @@ const extractJSON = (text) => {
   
       const jsonTemplate = await readJSONFile('agentTemplate.json');
       const blockTypes = await readJSONFile('blockTypes.json');
+      const models = await readJSONFile('models.json');
   
       const promptTemplate = PromptTemplate.fromTemplate(prompts.generateJSON);
   
       const formattedPrompt = await promptTemplate.format({ 
-        thoughts, 
+        thoughts,
         jsonTemplate: JSON.stringify(jsonTemplate, null, 2),
         blockTypes: JSON.stringify(blockTypes.blockTypes, null, 2),
-        instructions 
+        models: JSON.stringify(models.supportedModels, null, 2),
+        instructions
       });
       console.log('Generate JSON - Formatted prompt:', formattedPrompt);
       
