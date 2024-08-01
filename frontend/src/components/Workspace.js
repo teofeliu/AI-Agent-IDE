@@ -23,7 +23,7 @@ const Workspace = () => {
   }, [fetchWorkspace]);
 
   const [, drop] = useDrop({
-    accept: 'BLOCK',
+    accept: ['BLOCK', 'NEW_BLOCK'],
     drop: (item, monitor) => {
       const dropPosition = monitor.getClientOffset();
       handleBlockDrop(item, dropPosition);
@@ -36,7 +36,7 @@ const Workspace = () => {
       y: position.y - workspaceRect.top,
     };
 
-    let newIndex = blocks.length; // Default to adding at the end
+    let newIndex = blocks.length;
 
     for (let i = 0; i < blocks.length; i++) {
       if (blocks[i].position && typeof blocks[i].position.y === 'number') {
@@ -48,16 +48,18 @@ const Workspace = () => {
     }
 
     const newBlocks = [...blocks];
-    if (item.index !== undefined) {
+    if (item.id) {
       // Move existing block
-      const [movedBlock] = newBlocks.splice(item.index, 1);
+      const movedBlockIndex = newBlocks.findIndex(block => block.id === item.id);
+      const [movedBlock] = newBlocks.splice(movedBlockIndex, 1);
       newBlocks.splice(newIndex, 0, { ...movedBlock, position: relativePosition });
     } else {
       // Add new block
       newBlocks.splice(newIndex, 0, { 
         id: Date.now().toString(), 
         type: item.type, 
-        position: relativePosition 
+        position: relativePosition,
+        content: {}
       });
     }
 
@@ -66,7 +68,7 @@ const Workspace = () => {
       if (!block.position) {
         block.position = {};
       }
-      block.position.y = index * 60; // Adjust this value based on your block height
+      block.position.y = index * 90; // Adjust this value based on your block height
     });
 
     setBlocks(newBlocks);

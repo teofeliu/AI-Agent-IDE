@@ -4,7 +4,7 @@ import { useDrag } from 'react-dnd';
 
 const BlockType = ({ type }) => {
   const [{ isDragging }, drag] = useDrag({
-    type: 'BLOCK',
+    type: 'NEW_BLOCK',
     item: { type },
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
