@@ -1,65 +1,87 @@
 // frontend/src/components/AgentCreator.js
 
-// Import React and the useState hook for managing component state
 import React, { useState } from 'react';
-// Import the createAgent function from the API service
 import { createAgent } from '../services/api';
+import { generateThoughts, generateJSON } from '../services/llmService';
 
-// Define the AgentCreator component as a functional component
-// It receives onAgentCreated as a prop, which is a callback function
 const AgentCreator = ({ onAgentCreated }) => {
-  // Use the useState hook to create a state variable 'jsonInput' and its setter function
-  // Initialize jsonInput as an empty string
   const [jsonInput, setJsonInput] = useState('');
+  const [prompt, setPrompt] = useState('');
+  const [thoughts, setThoughts] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  // Define the form submission handler
   const handleSubmit = async (e) => {
-    // Prevent the default form submission behavior (page reload)
     e.preventDefault();
     try {
-      // Parse the JSON input string into a JavaScript object
       const agentData = JSON.parse(jsonInput);
-      // Log the parsed agent data (for debugging purposes)
       console.log('Sending agent data:', agentData);
-      
-      // Call the createAgent function from the API service
-      // This sends a POST request to the backend
       const response = await createAgent(agentData);
-      // Log the response from the server (for debugging purposes)
       console.log('Response from server:', response);
-      
-      // Call the onAgentCreated callback function
-      // This typically triggers a refresh of the parent component
       onAgentCreated();
-      
-      // Clear the input field after successful submission
       setJsonInput('');
     } catch (error) {
-      // If an error occurs (e.g., invalid JSON), log it to the console
       console.error('Error creating agent:', error);
     }
   };
 
-  // Return the JSX for rendering
+  const handleGenerateThoughts = async () => {
+    setLoading(true);
+    try {
+      const result = await generateThoughts(prompt);
+      setThoughts(result.thoughts);
+    } catch (error) {
+      console.error('Error generating thoughts:', error);
+    }
+    setLoading(false);
+  };
+
+  const handleGenerateJSON = async () => {
+    setLoading(true);
+    try {
+      const result = await generateJSON(thoughts, 'Generate a JSON structure for the AI agent based on the thoughts.');
+      setJsonInput(result.json);
+    } catch (error) {
+      console.error('Error generating JSON:', error);
+      // You might want to set an error state here and display it in the UI
+      // setError(error.message); refactor / setup later
+    }
+    setLoading(false);
+  };
+
   return (
-    // Create a form element with an onSubmit event handler
-    <form onSubmit={handleSubmit}>
-      {/* Create a textarea for JSON input */}
+    <div>
+      <h2>Create Agent</h2>
+      <h3>Option 1: Manual JSON Input</h3>
+      <form onSubmit={handleSubmit}>
+        <textarea
+          value={jsonInput}
+          onChange={(e) => setJsonInput(e.target.value)}
+          placeholder="Paste your agent JSON here"
+        />
+        <button type="submit">Create Agent</button>
+      </form>
+
+      <h3>Option 2: AI-Assisted Creation</h3>
       <textarea
-        // Set the value of the textarea to the jsonInput state
-        // This makes it a controlled component
-        value={jsonInput}
-        // Handle changes to the textarea
-        // Update the jsonInput state with the new value
-        onChange={(e) => setJsonInput(e.target.value)}
-        // Set a placeholder text for the textarea
-        placeholder="Paste your agent JSON here"
+        value={prompt}
+        onChange={(e) => setPrompt(e.target.value)}
+        placeholder="Enter your prompt for agent creation"
       />
-      {/* Create a submit button for the form */}
-      <button type="submit">Create Agent</button>
-    </form>
+      <button onClick={handleGenerateThoughts} disabled={loading}>
+        Generate Thoughts
+      </button>
+      {thoughts && (
+        <>
+          <h4>Generated Thoughts:</h4>
+          <pre>{thoughts}</pre>
+          <button onClick={handleGenerateJSON} disabled={loading}>
+            Generate JSON
+          </button>
+        </>
+      )}
+      {loading && <p>Loading...</p>}
+    </div>
   );
 };
 
-// Export the AgentCreator component so it can be imported elsewhere
 export default AgentCreator;

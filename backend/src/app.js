@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const config = require('./config');
 const workspaceRoutes = require('./routes/workspaceRoutes');
+const llmRoutes = require('./routes/llmRoutes');
 
 const app = express();
 
@@ -25,5 +26,6 @@ app.use(cors());
 app.use(express.json());
 
 app.use('/api/workspace', workspaceRoutes);
+app.use('/api/llm', llmRoutes);
 
 module.exports = app;

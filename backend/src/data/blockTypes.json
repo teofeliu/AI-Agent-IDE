@@ -1,0 +1,27 @@
+{
+    "blockTypes": [
+      {
+        "type": "Input",
+        "description": "Represents the initial input to the agent. It can contain text, data, or instructions that the agent will process.",
+        "properties": {
+          "content": "The actual input data or text"
+        }
+      },
+      {
+        "type": "Model",
+        "description": "Represents an AI model that processes input and generates output. It can be various types of models like language models, classifiers, etc.",
+        "properties": {
+          "modelDescription": "A brief description of the model",
+          "company": "The company that created the model",
+          "name": "The name of the model"
+        }
+      },
+      {
+        "type": "Output",
+        "description": "Represents the final or intermediate output from the agent. It contains the results of processing by the Model block.",
+        "properties": {
+          "content": "The generated output data or text"
+        }
+      }
+    ]
+  }
